@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="i95dev_settings_hemming" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Value Added Service</label>
+            <tab>i95dev_settings</tab>
+            <resource>I95Dev_CatalogSetup::I95Dev</resource>
+            <group id="defualt_hemming" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0"
+                   showInStore="0">
+                <label>Defualt Value Added Service Configuration</label>
+                <field id="Defualt_Title" translate="label" type="text" sortOrder="1" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Defualt Value Added Service Label</label>
+                </field>
+            </group>
+            <group id="general_hemming" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0"
+                   showInStore="0">
+                <label>Value Added Service Configuration</label>
+                <field id="Hemming_Title" translate="label" type="text" sortOrder="1" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Value Added Service Label</label>
+                    <comment>Options should be comma (,) separeated.</comment>
+                </field>
+            </group>
+        </section>
+        <section id="weltpixel_owl_carousel_config" translate="label" sortOrder="131" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Landing Page Carousel</label>
+            <tab>i95dev_settings</tab>
+            <resource>I95Dev_CatalogSetup::I95Dev</resource>
+            <group id="recently_purchased" translate="label" type="text" sortOrder="20" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Recentlypurchased Products Carousel Settings</label>
+
+                <field id="status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enable Recently purchased Product Carousel</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>In order for carousel to be displayed, make sure you have products defined as "Recently
+                        purchased" and the carousel is inserted in your page/block. Insert the
+                        carousel by following the documentation.
+                    </comment>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Title</label>
+                    <comment>Insert custom title to be displayed on the carousel. For no title leave field empty.
+                    </comment>
+                </field>
+                <field id="show_price" translate="label" type="select" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Show Price</label>
+                    <comment>Show/Hide the product price for products in the carousel</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_addto" translate="label" type="select" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Show Add To Cart</label>
+                    <comment>Show/Hide ‘Add to cart’ button for products in the carousel.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_wishlist" translate="label" type="select" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Show Wishlist</label>
+                    <comment>Show/Hide wishlist icon for products in the carousel.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_compare" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Show Compare</label>
+                    <comment>Show/Hide Compare icon for products in the carousel</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="random_sort" translate="label" type="select" sortOrder="70" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Random Sort</label>
+                    <comment>If enabled, the products in the carousel are displayed in random order on each refresh.
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="max_items" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Max Items</label>
+                    <comment>The total number of products to be loaded in the carousel.</comment>
+                </field>
+                <field id="slide_by" translate="label" type="text" sortOrder="83" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Slide By</label>
+                    <comment>
+                        <![CDATA[ Insert how many items to slide at once. Default value: 1 <br> Note: On breakpoints the value will auto adjust to visible items. ]]></comment>
+                    <validate>validate-number validate-greater-than-zero validate-no-empty</validate>
+                </field>
+                <!--Separator Slider-->
+
+                <field id="separatorSlider" translate="label" type="text" sortOrder="85" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorslide</frontend_model>
+                </field>
+                <field id="loop" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Loop</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>Inifnity loop. Duplicate last and first items to get loop illusion.</comment>
+                </field>
+                <field id="margin" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Margin</label>
+                    <comment>Set right margin for each item in carousel. Example: for a margin of 30px enter 30 in the
+                        field.
+                    </comment>
+                </field>
+                <field id="lazyLoad" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>LazyLoad</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>Lazy Load delays loading of images. Images outside of viewport are not loaded until user
+                        scrolls to them.
+                    </comment>
+                </field>
+                <field id="autoplay" translate="label" type="select" sortOrder="170" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Autoplay</label>
+                    <comment>Autoplay the carousel.</comment>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                </field>
+                <field id="autoplayTimeout" translate="label" type="text" sortOrder="180" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>AutoplayTimeout</label>
+                    <depends>
+                        <field id="autoplay">1</field>
+                    </depends>
+                    <comment>Autoplay interval timeout. Set time between changing products (in milliseconds, for
+                        Example: 4000, for 4 seconds))
+                    </comment>
+                </field>
+                <field id="autoplayHoverPause" translate="label" type="select" sortOrder="190" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>AutoplayHoverPause</label>
+                    <comment>Set the autoplay to pause on mouse hover.</comment>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <depends>
+                        <field id="autoplay">1</field>
+                    </depends>
+                </field>
+
+                <!--Separator Breakpoints-->
+
+                <field id="Separatorbreakpoint" translate="label" type="text" sortOrder="195" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorbreakpoint</frontend_model>
+                </field>
+
+                <!--Separator Breakpoint 1-->
+                <field id="s_1" translate="label" type="text" sortOrder="197" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorbreakpoint</frontend_model>
+                </field>
+
+                <field id="nav_brk1" translate="label" type="select" sortOrder="200" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Next/Prev Buttons</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, next/prev buttons are displayed.</comment>
+                </field>
+                <field id="dots_brk1" translate="label" type="select" sortOrder="205" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Dots</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, dots are displayed under carousel.</comment>
+                </field>
+                <field id="items_brk1" translate="label" type="text" sortOrder="210" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Items</label>
+                    <comment>The number of items you want to see on the screen. This value should be smaller than Max
+                        Items.
+                    </comment>
+                </field>
+                <field id="center_brk1" translate="label" type="select" sortOrder="220" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <label>Center</label>
+                    <comment>If True, carousel is centered on the screen. Works well even with an odd number of items.
+                    </comment>
+                </field>
+                <field id="stagePadding_brk1" translate="label" type="text" sortOrder="230" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>StagePadding</label>
+                    <depends>
+                        <field id="center_brk1">0</field>
+                    </depends>
+                    <comment>Padding left and right on stage (can see neighbours).</comment>
+                </field>
+
+                <!--Separatorbreakpoint 2-->
+                <field id="s_2" translate="label" type="text" sortOrder="235" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorbreakpoint</frontend_model>
+                </field>
+
+                <field id="nav_brk2" translate="label" type="select" sortOrder="240" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Next/Prev Buttons</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, next/prev buttons are displayed.</comment>
+                </field>
+                <field id="dots_brk2" translate="label" type="select" sortOrder="245" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Dots</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, dots are displayed under carousel.</comment>
+                </field>
+                <field id="items_brk2" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Items</label>
+                    <comment>The number of items you want to see on the screen. This value should be smaller than Max
+                        Items.
+                    </comment>
+                </field>
+                <field id="center_brk2" translate="label" type="select" sortOrder="260" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <label>Center</label>
+                    <comment>If True, carousel is centered on the screen. Works well even with an odd number of items.
+                    </comment>
+                </field>
+                <field id="stagePadding_brk2" translate="label" type="text" sortOrder="270" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>StagePadding</label>
+                    <depends>
+                        <field id="center_brk2">0</field>
+                    </depends>
+                    <comment>Padding left and right on stage (can see neighbours).</comment>
+                </field>
+
+                <!--Separatorbreakpoint 3-->
+                <field id="s_3" translate="label" type="text" sortOrder="275" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorbreakpoint</frontend_model>
+                </field>
+
+                <field id="nav_brk3" translate="label" type="select" sortOrder="280" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Next/Prev Buttons</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, next/prev buttons are displayed.</comment>
+                </field>
+                <field id="dots_brk3" translate="label" type="select" sortOrder="285" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Dots</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, dots are displayed under carousel.</comment>
+                </field>
+                <field id="items_brk3" translate="label" type="text" sortOrder="290" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Items</label>
+                    <comment>The number of items you want to see on the screen. This value should be smaller than Max
+                        Items.
+                    </comment>
+                </field>
+                <field id="center_brk3" translate="label" type="select" sortOrder="300" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <label>Center</label>
+                    <comment>If True, carousel is centered on the screen. Works well even with an odd number of items.
+                    </comment>
+                </field>
+                <field id="stagePadding_brk3" translate="label" type="text" sortOrder="310" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>StagePadding</label>
+                    <depends>
+                        <field id="center_brk3">0</field>
+                    </depends>
+                    <comment>Padding left and right on stage (can see neighbours).</comment>
+                </field>
+
+                <!--Separatorbreakpoint 3-->
+                <field id="s_4" translate="label" type="text" sortOrder="315" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <frontend_model>WeltPixel\OwlCarouselSlider\Block\Adminhtml\System\Config\Separatorbreakpoint</frontend_model>
+                </field>
+
+                <field id="nav_brk4" translate="label" type="select" sortOrder="320" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Next/Prev Buttons</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, next/prev buttons are displayed.</comment>
+                </field>
+                <field id="dots_brk4" translate="label" type="select" sortOrder="325" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Dots</label>
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <comment>If True, dots are displayed under carousel.</comment>
+                </field>
+                <field id="items_brk4" translate="label" type="text" sortOrder="330" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Items</label>
+                    <comment>The number of items you want to see on the screen. This value should be smaller than Max
+                        Items.
+                    </comment>
+                </field>
+                <field id="center_brk4" translate="label" type="select" sortOrder="340" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>WeltPixel\OwlCarouselSlider\Model\Config\Source\Truefalse</source_model>
+                    <label>Center</label>
+                    <comment>If True, carousel is centered on the screen. Works well even with an odd number of items.
+                    </comment>
+                </field>
+                <field id="stagePadding_brk4" translate="label" type="text" sortOrder="350" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>StagePadding</label>
+                    <depends>
+                        <field id="center_brk4">0</field>
+                    </depends>
+                    <comment>Padding left and right on stage (can see neighbours).</comment>
+                </field>
+            </group>
+            <!--Related Products Section-->
+            <group id="related_products" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="title2" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title2</label>
+                    <comment>Insert custom title to be displayed on cart page carousel. For no title leave field empty.</comment>
+                </field>
+            </group>
+        </section>
+
+    </system>
+</config>

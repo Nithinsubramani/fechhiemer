@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Customer\Model\Address\CustomerAddressDataProvider">
+        <plugin name="company-users-address" type="I95Dev\CompanyAddressbook\Plugin\Company\Users\CompanyAddress"/>
+    </type>
+    <preference for="Magento\Quote\Model\QuoteAddressValidator"
+                type="I95Dev\CompanyAddressbook\Model\CompanyQuoteAddressValidator"/>
+
+    <type name="Magento\Customer\Model\AccountManagement">
+        <plugin name="CompanyDetails" type="I95Dev\CompanyAddressbook\Plugin\Model\AccountManagement" sortOrder="1"/>
+    </type>
+    <type name="Magento\Customer\Block\Address\Grid">
+        <plugin name="CompanyAddressDetails" type="I95Dev\CompanyAddressbook\Plugin\Address\CompanyAddressDetails"
+                sortOrder="2"/>
+    </type>
+    <type name="Magento\Customer\Block\Address\Book">
+        <plugin name="CompanyAddressBookDetails"
+                type="I95Dev\CompanyAddressbook\Plugin\Address\CompanyAddressBookDetails" sortOrder="3"/>
+    </type>
+    <type name="Magento\Customer\Block\Address\Edit">
+        <plugin name="CompanyAddressBookEdit"
+                type="I95Dev\CompanyAddressbook\Plugin\Address\CompanyAddressBookEditDetails" sortOrder="4"/>
+    </type>
+    <!--<preference for="Magento\Checkout\Block\Onepage" type="I95Dev\CompanyAddressbook\Block\CompanyCheckOut" />-->
+    <!--<preference for="Magento\Customer\Block\Account\Dashboard\Address" type="I95Dev\CompanyAddressbook\Block\Account\Dashboard\CompanyAddressCheck" />-->
+    <!--<preference for="Magento\Customer\Block\Address\Edit" type="I95Dev\CompanyAddressbook\Block\CompanyAddressList" />-->
+    <preference for="Magento\Customer\Block\Address\Book" type="I95Dev\CompanyAddressbook\Block\Address\Book"/>
+</config>

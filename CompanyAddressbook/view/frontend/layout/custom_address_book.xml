@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+Loading Default Shipping and Billing Addresses and Additional Address List for Company Customers
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="content">
+        <block class="Magento\Customer\Block\Address\Book" name="address_book"
+               template="I95Dev_CompanyAddressbook::address/addressbook.phtml" cacheable="false"/>
+        <block class="Magento\Customer\Block\Address\Grid" name="address_grid"
+               template="I95Dev_CompanyAddressbook::address/addressgrid.phtml" cacheable="false"/>
+        <block class="Magento\Customer\Block\Address\Edit" name="customer_address_edit"
+               template="I95Dev_CompanyAddressbook::address/addressedit.phtml" cacheable="false"/>
+    </referenceContainer>
+</page>

@@ -1,0 +1,564 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ConfigurableMatrixView
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product Configurable view template
+ *
+ * @var $block \Magento\Swatches\Block\Product\Renderer\Configurable
+ */
+?>
+<?php
+$_product = $block->getProduct();
+$info_html_child = $block->getConfigurableMatrixViewData();
+
+$attribute_matrix = $block->getAttributeMatrix();
+$attributes_matrix = $block->getAttributeMatrixArray();
+$number_attribute_matrix = count($attribute_matrix);
+$attribute_id_swatch = array_keys($block->getSwatchAttributesDataMatrix());
+$price_display_type = $block->getPriceDisplayType();
+$taxRate = ($block->getRateTax() > 0)? $block->getRateTax() : 0;
+$query_product = ['product'=> $_product->getId()];
+$matrixview_url = $block->getUrl('matrixview/index/index', ['_query' => $query_product]);
+$helper = $block->getHelperMatrixView();
+$hemming_options = array();
+$value_added_services = $helper->getValueAddedService();
+$defualt_value_added_services = $helper->getDefualtAddedService();
+$value_added_service_array = explode(",",$value_added_services);
+$hemmingTitle ="";
+foreach ($_product->getOptions() as $option) {
+    $option_id_title = $option->getData('title');
+    if ($option_id_title === $defualt_value_added_services) {
+        $option_id_hemming = $option->getData('option_id');
+        $hemmingTitle = $defualt_value_added_services;
+        foreach ($option->getValues() as $value) {
+            $hemming_options[] = $value->getData();
+        }
+     }
+ }
+if(count($hemming_options)==0){
+foreach ($_product->getOptions() as $option) {
+    $option_id_title = $option->getData('title');
+        foreach ($value_added_service_array as $value_added_service_arrays) {
+            if ($option_id_title === $value_added_service_arrays) {
+                $option_id_hemming = $option->getData('option_id');
+                $hemmingTitle = $value_added_service_arrays;
+                foreach ($option->getValues() as $value) {
+                    $hemming_options[] = $value->getData();
+                }
+            }
+        }
+}
+}
+?>
+<div class="total-rest-matrix-view">
+	<div class="reset">
+		<span id="reset-matrix-view" title="<?php /* @escapeNotVerified */ echo __('Reset All') ?>">
+			<span><?php echo __('Reset All') ?></span>
+		</span>
+	</div>
+</div>
+<div class="swatch-opt" data-role="swatch-options"></div>
+<?php if (!$block->getHasSwatchAttributeMatrix()): ?>
+	<div class="noswatch-nomatrix">
+	<?php $_attributes = $block->decorateArray($block->getAllowAttributes()); ?>
+	<?php if (count($_attributes)):?>
+	    <?php foreach ($_attributes as $_attribute_no_matrix): ?>
+	    	<?php 
+	    	  if (isset($attribute_matrix[$_attribute_no_matrix->getAttributeId()])) {continue; }
+	    	?>
+	    	<label class="label" for="attribute<?= /* @escapeNotVerified */ $_attribute_no_matrix->getAttributeId() ?>">
+                <span><?= $block->escapeHtml($_attribute_no_matrix->getProductAttribute()->getStoreLabel()) ?></span>
+            </label>
+	        <div class="field configurable required">
+	            <div class="control">
+	                <select name="super_attribute[<?= /* @escapeNotVerified */ $_attribute_no_matrix->getAttributeId() ?>]"
+	                        data-selector="super_attribute[<?= /* @escapeNotVerified */ $_attribute_no_matrix->getAttributeId() ?>]"
+	                        data-validate="{required:true}"
+	                        id="attribute<?= /* @escapeNotVerified */ $_attribute_no_matrix->getAttributeId() ?>"
+	                        class="super-attribute-select">
+	                    <option value=""><?= /* @escapeNotVerified */ __('Choose an Option...') ?></option>
+	                </select>
+	            </div>
+	        </div>
+	    <?php endforeach; ?>
+	<?php endif;?>
+	</div>
+<?php endif ?>
+
+<div class="block-bss-matrixview">
+	<?php if ($number_attribute_matrix == 1): ?>
+	<div class="bss-attribute-label">
+		<span><?php echo __($attributes_matrix[0]['store_label']) ?></span>
+	</div>
+	<table id="bss-matrixview">
+	<caption>store value</caption>
+		<thead>
+			<tr class="item-info">
+				<?php 
+					$sort_option = [];
+					$sort_option_success = [];
+					if ($helper->isSortOption()) {
+						foreach ($attributes_matrix[0]['values'] as $k11 => $v11) {
+							$sort_option[$v11['store_label']] = $v11;
+						}
+						ksort($sort_option);
+
+						foreach ($sort_option as $k12 => $v12) {
+							$sort_option_success[] = $v12;
+						}
+					} else {
+						$sort_option_success = $attributes_matrix[0]['values'];
+					}
+				?>
+				<?php $th = 1; foreach ($sort_option_success as $attribute_id => $attribute): ?>
+					<th class="first-attr <?php echo 'bss-swatch'?>" attribute-code="<?php echo $attributes_matrix[0]['attribute_code'];?>" attribute-value="<?php echo $attribute['value_index']; ?>" attribute-id="<?php echo $attributes_matrix[0]['attribute_id']; ?>">
+						<?php if (!in_array($attributes_matrix[0]['attribute_id'], $attribute_id_swatch)): ?>
+								<span class="lable-super-attribute"><?php echo $attribute['store_label'] ?></span>
+						<?php endif ?>
+						<input type="hidden" name="bss_super_attribute[<?php echo $th ?>][<?php echo $attributes_matrix[0]['attribute_id'] ?>]" value="<?php echo $attribute['value_index'] ?>" class="swatch-attribute" readonly="readonly" disabled="disabled">
+					</th>
+				<?php $th++; endforeach ?>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="item-info">
+				<?php $i = 1;foreach ($sort_option_success as $attribute_id => $attribute): ?>
+					<td class="child-product-matrix">
+						<input type="number" class="qty" name="qty_<?php /* @escapeNotVerified */ echo $_product->getId() ?>_<?php /* @escapeNotVerified */ echo $i ?>" value="0" placeholder="">
+						<p class="mess-err-bss-m">
+							<span class="mess-err-bss"></span>
+						</p>
+						<input type="hidden" class="super_attribute_matrix" name="super_attribute_<?php echo $_product->getId() ?>[<?php echo $i ?>][<?php echo $attributes_matrix[0]['attribute_id'] ?>]" data-attribute-id="<?php echo $attributes_matrix[0]['attribute_id'] ?>" value="<?php echo $attribute['value_index']?>">
+					</td>
+				<?php $i++;endforeach ?>
+			</tr>
+		
+		</tbody>
+	</table>
+	<?php endif ?>
+	<?php if ($number_attribute_matrix > 1): ?>
+	<?php
+		$sort_option = [];
+		$sort_option_success = [];
+		$sort_option1 = [];
+		$sort_option_success1 = [];
+		if ($helper->isSortOption()) {
+			foreach ($attributes_matrix[0]['values'] as $k01 => $v01) {
+				$sort_option[$v01['store_label']] = $v01;
+			}
+			ksort($sort_option);
+
+			foreach ($sort_option as $k11 => $v11) {
+				$sort_option_success[] = $v11;
+			}
+			foreach ($attributes_matrix[1]['values'] as $k02 => $v02) {
+				$sort_option1[$v02['store_label']] = $v02;
+			}
+			ksort($sort_option1);
+
+			foreach ($sort_option1 as $k12 => $v12) {
+				$sort_option_success1[] = $v12;
+			}
+		} else {
+			$sort_option_success = $attributes_matrix[0]['values'];
+			$sort_option_success1 = $attributes_matrix[1]['values'];
+                        
+		}
+	?>
+	<canvas id="bsscanvas"></canvas>
+	<table id="bss-matrixview">
+	<caption>store value</caption>
+		<thead>
+			<tr class="item-info">
+				<th class="label-attribute-f">
+					<span class="label-attribute1">
+						<?php echo __($attributes_matrix[1]['store_label']) ?>
+					</span>
+					<span class="label-attribute0">
+						<?php echo __($attributes_matrix[0]['store_label']) ?>
+					</span>
+					<span class="render-diagonal-line" value=""></span>
+				</th>
+				<?php $th = 1; foreach ($sort_option_success1 as $attribute_id => $attribute): ?>
+					<th class="first-attr <?php echo 'bss-swatch'?>" attribute-code="<?php echo $attributes_matrix[1]['attribute_code'];?>" attribute-value="<?php echo $attribute['value_index']; ?>" attribute-id="<?php echo $attributes_matrix[1]['attribute_id']; ?>">
+							<?php if (!in_array($attributes_matrix[1]['attribute_id'], $attribute_id_swatch)): ?>
+								<span class="lable-super-attribute"><?php echo $attribute['store_label'] ?></span>
+							<?php endif ?>
+							<input type="hidden" name="bss_super_attribute[<?php echo $th ?>][<?php echo $attributes_matrix[1]['attribute_id'] ?>]" value="<?php echo $attribute['value_index'] ?>" class="swatch-attribute" readonly="readonly" disabled="disabled">
+					</th>
+				<?php $th++; endforeach ?>
+			</tr>
+		</thead>
+		<tbody>
+		<?php $j = 1 ;foreach ($sort_option_success as $attribute_id => $attribute): ?>
+			<tr class="item-info">
+				<td class="two-attr <?php echo 'bss-swatch'?>" attribute-code="<?php echo $attributes_matrix[0]['attribute_code'];?>" attribute-value="<?php echo $attribute['value_index']; ?>" attribute-id="<?php echo $attributes_matrix[0]['attribute_id']; ?>">
+					<?php if (!in_array($attributes_matrix[0]['attribute_id'], $attribute_id_swatch)): ?>
+						<span class="lable-super-attribute"><?php echo $attribute['store_label'] ?></span>
+					<?php endif ?>
+					<input type="hidden" name="bss_super_attribute[<?php echo $j ?>][<?php echo $attributes_matrix[0]['attribute_id'] ?>]" value="<?php echo $attribute['value_index'] ?>" class="swatch-attribute" readonly="readonly" disabled="disabled">
+				</td>
+			<?php foreach ($sort_option_success1 as $attribute_id1 => $attribute1): ?>
+				<td class="child-product-matrix">
+					<input type="number" class="qty" name="qty_<?php echo $_product->getId() ?>_<?php echo $j ?>" value="0" maxlength="12" title="<?php /* @escapeNotVerified */ echo __('Qty') ?>" data-validate="{'validate-number':true, 'validate-zero-or-greater':true}" placeholder="">
+					<p class="mess-err-bss-m">
+						<span class="mess-err-bss"></span>
+					</p>
+					<input type="hidden" class="super_attribute_matrix" data-attribute-id="<?php echo $attributes_matrix[0]['attribute_id'] ?>" name="super_attribute_<?php echo $_product->getId() ?>[<?php echo $j ?>][<?php echo $attributes_matrix[0]['attribute_id'] ?>]" value="<?php echo $attribute['value_index']?>">
+					<input type="hidden" class="super_attribute_matrix" data-attribute-id="<?php echo $attributes_matrix[1]['attribute_id'] ?>" name="super_attribute_<?php echo $_product->getId() ?>[<?php echo $j ?>][<?php echo $attributes_matrix[1]['attribute_id'] ?>]" value="<?php echo $attribute1['value_index']?>">
+				</td>
+				<?php $j++; endforeach ?>
+			</tr>
+		<?php endforeach ?>
+		</tbody>
+	</table>
+	<?php endif ?>
+</div>
+<input type="hidden" name="same_tier_price[<?php echo $_product->getId() ?>]" value="<?php echo $block->getHasSameTierPrice() ?>">
+<input type="hidden" name="qty_of_product_in_cart" id="qty_of_product_in_cart" value="0">
+<input type="hidden" name="bss_configurable_matrixview" value="1">
+<?php if(count($hemming_options)>0){ ?>
+<input type="hidden" id="heming_options_<?php echo $_product->getId() ?>" name="heming_options_<?php echo $_product->getId() ?>" value="<?php echo $option_id_hemming; ?>">
+<?php } ?>
+<script type="text/x-magento-template" id="instock-mt">
+<p id="<%- data.id %>" class="stock-st">
+	<span class="stock-status-mt"><?php echo __('In Stock')?> (<%- data.qty %>)</span>
+          <?php if(count($hemming_options)>0){ ?>
+         <span id="<%- data.id %>" class="btn btn-primary pull-right open-modal-customize customize">Customize</span>
+        <div id="popup-modal-customize<%- data.id %>">
+            <div class="field">
+            	<table class="hemming-options-table">
+            		<tr>
+            			<th class="wid70">
+			                <label class="label" for="select_<?php echo $option_id_hemming; ?>">
+			                        <span><?php echo $hemmingTitle;?></span>
+			                </label>
+			             </th>
+			             <th style="text-align:center;">
+			             	<label>Quantity</label>
+			             </th>
+			        </tr>
+
+                                <?php foreach ($hemming_options as $key => $_store): ?>
+			        <tr>
+			        	<td class="wid70">
+			        		<input type="hidden" id="heming_options_count" name="heming_options_count" value="<?php echo count($hemming_options) ?>">
+			                <div id="hemming_options_<?php echo $_product->getId() ?>_<%- data.id %>_<?php echo $key; ?>" name="hemming_options_<?php echo $_product->getId() ?>_<%- data.id %>_<?php echo $key; ?>" class="product-custom-option admin__control-select">
+			                  <input readonly class="custom_options_hemming_options" type="text" size="4"   id="custom_options_qty_<%- data.id %>_<?php echo $key; ?>" name="hemming_options_qty_<?php echo $_product->getId() ?>_<%- data.id %>_<?php echo $key; ?>" value="<?php echo $_store['default_title'].'+&#36;'.$_store['price'] ?>" />
+			                </div>
+			        	</td>
+
+			        	<td class="wid30">
+			        		<div class="hemming_options_qty">
+			                    <input class="custom_options_hemming_qty" data-pricehemming="<?php echo $_store['price']?>" data-sku="<?php echo $_store['sku']?>" data-option="<?php echo $_store['option_type_id']?>" type="number" size="4" id="custom_options_qty_<?php echo $_product->getId() ?>_<%- data.id %>_<?php echo $key; ?>" name="hemming_options_qty_<?php echo $_product->getId() ?>_<%- data.id %>_<?php echo $key; ?>" value="" />
+			                </div>
+			                
+			        	</td>
+			        </tr>
+                                  <?php endforeach; ?>  
+			       </table>		                
+			            
+			        </div> 
+			        <table class="Qty-table">
+			        	<tr>
+				        	<td>
+				        		 <label class="label" for="">
+			                        <span>Product Quantity:</span>     
+			             			</label>
+			             			<sapn id="simple_product_qty_<%- data.id %>">
+			                
+			            		</sapn>
+				        	</td>
+				        	<td>
+				        		<label class="label" for="">
+			                        <span>Required Quantity:</span>     
+			             </label>
+			            
+			            <sapn id="require_product_qty_<%- data.id %>">
+			                <span id="req_<%- data.id %>"></span>/<span id="total_<%- data.id %>"></span>
+			            </sapn>
+				        	</td>
+			        	</tr>
+                                        <tr>
+                                            <td colspan="2"><span class="red" id="hemming_options_error_msg_<%- data.id %>"></span></td>
+                                        </tr>
+			        </table>
+			
+            
+        </div>
+          <?php } ?>
+</p>
+<script type="text/javascript">
+ require(
+            [
+                'jquery',
+                'Magento_Ui/js/modal/modal'
+            ],
+            function (
+                    $,
+                    modal
+                    ) {
+                var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    title: 'Value Added Service',
+                    modalClass: 'custom-modal customize-popup',
+                    buttons: [{
+                            text: $.mage.__('Submit'),
+                            class: '',
+                            click: function () {
+                                var childId = <%- data.id %>;                              
+                                
+                                var defualtQty = parseFloat($('#simple_product_qty_'+childId).html());
+                                var total_qty_in_options = 0;
+                                $('#popup-modal-customize'+childId+' .custom_options_hemming_qty').each(function() {
+                                    if ($(this).val() !='' && $(this).val() > 0) {
+                                        total_qty_in_options += parseFloat($(this).val());
+                                    }
+                                })
+                                if(total_qty_in_options>defualtQty){
+                                    $('#hemming_options_error_msg_'+childId).html("Customized quantity is should not be grater then product quantity.");
+                                    return false;
+                                }else if(total_qty_in_options<defualtQty){
+                                    $('#hemming_options_error_msg_'+childId).html("Customized quantity is should not be less then product quantity.");
+                                    return false;
+                                }else{
+                                    $('#hemming_options_error_msg_'+childId).html("");
+                                }
+                                
+                                var parentId = "<?php echo $_product->getId() ?>";
+                                var countHemming = $("#heming_options_count").val();
+                                var attributeSelected = $("#child_product_new").attr('data-selectedattribute');
+                                var custmizeHemmingArray = [];
+                                for(i=0;i<countHemming;i++){
+                                    var custmizedValue = $("#custom_options_qty_"+parentId+"_"+childId+"_"+i).val();
+                                    if(custmizedValue>0){
+                                       var hemmintOptionValue = $("#custom_options_qty_"+parentId+"_"+childId+"_"+i).attr('data-option');
+                                        var hemmintOptionSku = $("#custom_options_qty_"+parentId+"_"+childId+"_"+i).attr('data-sku');
+                                       custmizedValue = custmizedValue+"-"+attributeSelected+"-"+hemmintOptionValue+"-"+hemmintOptionSku;
+                                       custmizeHemmingArray.push(custmizedValue);
+                                    }
+                                }
+                                $("#child_product_new").remove();
+                                if ($('#set_hidden_valus_popup_'+childId).length) {
+                                    $('#set_hidden_valus_popup_'+childId).attr('value',custmizeHemmingArray);
+                                    $('#set_hidden_valus_popup_'+childId).attr('data-totalqty', total_qty_in_options);
+                                }else{
+                                    $('#product_addtocart_form').append('<input type="hidden" data-totalqty ="'+total_qty_in_options+'" id="set_hidden_valus_popup_<%- data.id %>" class="set_hidden_valus_popup" name="custmizeHemmingArray[<%- data.id %>]" value="'+custmizeHemmingArray+'" />');
+                                }
+                                
+                                var totalChildProductsQty = 0;
+                                 $('#bss-matrixview input.qty').each(function(){
+                                    if ($(this).val() !='' && $(this).val() > 0) {
+                                       var childProducsCheck = $(this).attr('id').split('_');
+                                       var childProducId = childProducsCheck[2];
+                                       var unit_price_hemming = parseFloat($('#product-price-'+childProducId).attr('data-price-amount'));
+                                        if ($('#set_hidden_valus_popup_'+childProducId).length) {
+                                            var priceHemming = parseFloat($('#custom_options_qty_'+parentId+'_'+childProducId+'_0').attr('data-pricehemming'));
+                                            var unit_price_hemming = parseFloat(priceHemming+unit_price_hemming);
+                                        }
+                                        totalChildProductsQty += parseFloat($(this).val()*unit_price_hemming);
+                                    }
+                                });
+                                $('.total-price-matrix').html("&#36;"+totalChildProductsQty.toFixed(2));
+                                this.closeModal();
+                            }
+                        }]
+                };
+                var popup = modal(options, $('#popup-modal-customize'+<%- data.id %>));
+            }
+    );
+    </script>
+</script>
+
+<script type="text/x-magento-template" id="outofstock-mt">
+<p id="<%- data.id %>" class="stock-st">
+	<span class="stock-status-mt"><?php echo __('Out of stock')?></span>
+</p>
+</script>
+<style type="text/css" media="screen">
+	 /*hide box-qty*/
+	.box-tocart .qty{
+		display: none;
+	}
+        .hidetier-price{
+		display: none;
+	}
+</style>
+<div class="product-swatch-default" style="display: none;">
+<?php if (!$block->getHasSwatchAttributeMatrix()): ?>
+<?php if (count($attributes_matrix)):?>
+    <?php foreach ($attributes_matrix as $_attribute_matrix): ?>
+        <div class="field configurable required">
+            <div class="control">
+                <select name="super_attribute[<?= /* @escapeNotVerified */ $_attribute_matrix['attribute_id'] ?>]"
+                        data-selector="super_attribute[<?= /* @escapeNotVerified */ $_attribute_matrix['attribute_id'] ?>]"
+                        data-validate="{required:true}"
+                        id="attribute<?= /* @escapeNotVerified */ $_attribute_matrix['attribute_id'] ?>"
+                        class="super-attribute-select">
+                    <option value=""><?= /* @escapeNotVerified */ __('Choose an Option...') ?></option>
+                </select>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif;?>
+<?php endif;?>
+</div>
+<?php if ($block->getHasSwatchAttributeMatrix()): ?>
+<?php if ($block->getJsonConfigNoMatrix()): ?>
+<script type="text/x-magento-init">
+    {
+        "[data-role=swatch-options]": {
+            "Magento_Swatches/js/swatch-renderer": {
+                "jsonConfig": <?php /* @escapeNotVerified */ echo $swatchOptions = $block->getJsonConfigNoMatrix(); ?>,
+                "jsonSwatchConfig": <?php /* @escapeNotVerified */
+                    echo $swatchOptions = $block->getJsonSwatchNoMatrix(); ?>,
+                "mediaCallback": "<?php /* @escapeNotVerified */ echo $block->getMediaCallback() ?>",
+                "gallerySwitchStrategy": "<?php /* @escapeNotVerified */ echo $block->getVar('gallery_switch_strategy',
+                    'Magento_ConfigurableProduct') ?: 'replace'; ?>"
+            }
+        }
+    }
+</script>
+<?php endif ?>
+<script type="text/x-magento-init">
+    {
+        ".product-swatch-default": {
+            "Magento_Swatches/js/swatch-renderer": {
+                "jsonConfig": <?php /* @escapeNotVerified */ echo $swatchOptions = $block->getJsonConfigMHide(); ?>,
+                "jsonSwatchConfig": <?php /* @escapeNotVerified */
+                    echo $swatchOptions = $block->getJsonSwatchConfig(); ?>,
+                "mediaCallback": "<?php /* @escapeNotVerified */ echo $block->getMediaCallback() ?>",
+                "gallerySwitchStrategy": "<?php /* @escapeNotVerified */ echo $block->getVar('gallery_switch_strategy',
+                    'Magento_ConfigurableProduct') ?: 'replace'; ?>"
+            }
+        }
+    }
+</script>
+<?php else: ?>
+<script type="text/x-magento-init">
+    {
+        ".noswatch-nomatrix": {
+            "configurable": {
+                "spConfig": <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>,
+                "gallerySwitchStrategy": "<?php /* @escapeNotVerified */ echo $block->getVar('gallery_switch_strategy',
+                    'Magento_ConfigurableProduct') ?: 'replace'; ?>"
+            }
+        }
+    }
+</script>
+<?php endif ?>
+<script type="text/x-magento-init">
+    {
+        ".bss-swatch": {
+            "Bss_ConfigurableMatrixView/js/swatch": {
+                "jsonConfig": <?php /* @escapeNotVerified */ echo $swatchOptions = $block->getJsonConfigM(); ?>,
+                "jsonSwatchConfig": <?php /* @escapeNotVerified */
+                    echo $swatchOptions = $block->getJsonSwatchConfig(); ?>
+            }
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+	 {
+        "*": {
+            "Bss_ConfigurableMatrixView/js/configurable-matrixview": {
+                "info_html_child": <?php /* @escapeNotVerified */ echo $info_html_child ?>,
+                "childproduct": <?php /* @escapeNotVerified */ echo  $block->getJsonConfigM() ?>,
+                "priceRange": <?php /* @escapeNotVerified */ echo json_encode($block->getPriceRange(),JSON_FORCE_OBJECT) ?>,
+                "priceFormat": <?php /* @escapeNotVerified */ echo json_encode($block->getPriceFormat(),JSON_FORCE_OBJECT) ?>,
+                "matrixview_url":"<?php /* @escapeNotVerified */ echo $matrixview_url ?>",
+                "show_button_qty": "<?php /* @escapeNotVerified */ echo $helper->canShowButtonQty() ?>",
+                "cks_tier_price": "<?php /* @escapeNotVerified */ echo $block->getHasSameTierPrice() ?>",
+                "cks_tier_price_html": "<?php /* @escapeNotVerified */ echo $block->getHasSameTierPriceHtml() ?>",
+				"tier_price_calculate": "<?php /* @escapeNotVerified */ echo $helper->calculateTierPrice() ?>",
+				"price_display_type": "<?php /* @escapeNotVerified */ echo  $price_display_type ?>",
+				"taxRate": "<?php /* @escapeNotVerified */ echo  $taxRate / 100 ?>",
+				"excl_text": "<?php /* @escapeNotVerified */ echo __("Excl. Tax") ?>"
+            }
+        }
+    }
+</script>
+<div class="total-rest-matrix-view">
+	<div class="total-price">
+		<?php if ($helper->canShowTotal()): ?>
+		<p><?php echo __('Total price: ') ?><span class="total-price-matrix"></span></p>
+		<?php endif ?>
+	</div>
+</div>
+ <script type="text/javascript">
+        require(['jquery', 'jquery/ui'], function ($) {
+            $(".product-add-form").prependTo("div.product.info.detailed");
+            $(".product-options-wrapper .fieldset .field").css("display", "none");
+            $(document).on( 'click', '.action-close', function () {
+                $("#child_product_new").remove();
+            });
+            $(document).on( 'click', '.open-modal-customize', function () {
+                var id = $(this).attr('id');
+                 var configurablePid = "<?php echo $_product->getId() ?>";
+                var selectedAttribute = $("#qty_hemming_"+id).attr( "name" );
+                var result=selectedAttribute.split('_');
+                var selectedAttributeValue=result[2];
+                var minQtyVal = $("#qty_hemming_"+id).val();
+                if(minQtyVal == 0){
+                    require(['Magento_Ui/js/modal/alert'], function(alert) {  
+                    alert({
+                    title: 'Attention',
+                    content: 'Please select the quantity of selecting a variant.',
+                    actions: {
+                    always: function(){}
+                    }
+                    });
+                    });
+                    $("#qty_hemming_"+id).focus();        
+                    return false;
+                }
+                $("#custom_options_qty_"+configurablePid+"_"+id+"_0").val();
+                $("#simple_product_qty_"+id).html(minQtyVal);
+                $("#req_"+id).html(minQtyVal);
+                $("#total_"+id).html(minQtyVal);
+                $("#custom_options_qty_"+id).attr('data-id', minQtyVal);
+                $("#popup-modal-customize"+id).modal('openModal');
+                $("#popup-modal-customize"+id).append('<input type="hidden" data-selectedattribute ="'+selectedAttributeValue+'" class="child-product-new" id="child_product_new" name="child_product_'+id+'" value="'+ id +'">')
+            });
+            $(document).on( 'blur', '.custom_options_hemming_qty', function () {
+                var cpId = $("#child_product_new").val();
+                var defualtQty = parseFloat($('#simple_product_qty_'+cpId).html());
+                     var total_qty_in_options = 0;
+                    
+                     $('#popup-modal-customize'+cpId+' .custom_options_hemming_qty').each(function() {
+                         if ($(this).val() !='' && $(this).val() > 0) {
+                             total_qty_in_options += parseFloat($(this).val());
+                         }
+                     })
+                      $("#req_"+cpId).html(total_qty_in_options);
+                     if(total_qty_in_options>defualtQty){
+                         $('#hemming_options_error_msg_'+cpId).html("Customized quantity is should not be grater then product quantity.");
+                         return false;
+                     }else if(total_qty_in_options<defualtQty){
+                        $('#hemming_options_error_msg_'+cpId).html("Customized quantity is should not be less then product quantity.");
+                         return false;
+                     }else{
+                         $('#hemming_options_error_msg_'+cpId).html("");
+                     }
+            });
+       });
+</script>
